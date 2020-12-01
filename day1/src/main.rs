@@ -2,6 +2,7 @@ use std::fs;
 use std::cmp::min;
 use std::process::exit;
 use std::time::Instant;
+use std::collections::BTreeSet;
 
 fn optimized_solution_part1(numbers: Vec<u16>) -> () {
     let (mut low, high): (Vec<u16>, Vec<u16>) = numbers.iter().partition(|&&x| x <= (2020 / 2));
@@ -33,6 +34,21 @@ fn optimized_solution_part1(numbers: Vec<u16>) -> () {
             }
         }
         n -= 1;
+    }
+    println!("Found no solution ;(");
+}
+
+
+fn optimized_solution_part1_hashset(numbers: Vec<u16>) -> () {
+    let mut s:BTreeSet<u16>=BTreeSet::new();
+    for i in 0..numbers.len() {
+        let current=*numbers.get(i).expect("Something was wrong, there should be an index here");
+        let diff=2020-current;
+        if s.contains(&diff){
+            println!("Found {} and {} which makes {}",diff,current,diff*current);
+            return;
+        }
+        s.insert(current);
     }
     println!("Found no solution ;(");
 }
@@ -71,36 +87,28 @@ fn dumb_solution_part2(numbers: Vec<u16>) {
 
 
 fn optimized_solution_part2(numbers: Vec<u16>) -> () {
-    let (mut low, temp): (Vec<u16>, Vec<u16>) = numbers.iter().partition(|&&x| x <= (2020 / 3));
-    let (mut medium, high): (Vec<u16>, Vec<u16>) = temp.iter().partition(|&&x| x <= (2 * 2020 / 3));
-    let mut n: usize = min(low.len(), min(medium.len(), high.len()));
-    if n == 0 {
-        assert!(low.len() >= 2);
-        let last_low: u16 = *low.last().expect("Something was wrong, there should be an index here");
-        low.pop();
-        let last_last_low: u16 = *low.last().expect("Something was wrong, there should be an index here");
-        assert_eq!(last_last_low, last_low);
-        assert_eq!(last_last_low, 1024);
-        println!("Found 1024 twice ! {}", last_last_low * last_low);
-    }
-    let mut last_index: usize = 0;
-    while n > 0 {
-        let last_low: u16 = *low.last().expect("Something was wrong, there should be an index here");
-        low.pop();
-        for i in last_index..high.len() {
-            let current_high: u16 = *high.get(i).expect("Something was wrong, there should be an index here");
-            if last_low + current_high == 2020 {
-                println!("Found {} and {} which makes {}", last_low, current_high, last_low * current_high);
+    let n=numbers.len();
+    for i in 0..n - 2 {
+        let a=*numbers.get(i).expect("Something was wrong, there should be an index here");
+        let mut start = i + 1;
+        let mut end = n - 1;
+        while start < end {
+            let b = *numbers.get(start).expect("Something was wrong, there should be an index here");
+            let c = *numbers.get(end).expect("Something was wrong, there should be an index here");
+            if a + b + c == 0 {
+                println!("Found {}, {} and {} which makes {}", a,b,c, (a as u64).wrapping_mul(b as u64).wrapping_mul(c as u64));
+                start = start + 1;
+                end = end - 1;
                 return;
             }
-            if last_low + current_high > 2020 {
-                // we know that this low is not that good so we can discard it
-                break;
-            } else {
-                last_index = i;
+            else if a + b + c > 0 {
+                end = end - 1;
             }
+            else{
+                start = start + 1;
+            }
+
         }
-        n -= 1;
     }
     println!("Found no solution ;(");
 }
@@ -117,17 +125,29 @@ fn main() {
     // this is the key part
     numbers.sort();
 
-    println!("Running dumb solution part1");
-    let now = Instant::now();
-    optimized_solution_part1(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+
 
     println!("Running dumb solution part1");
     let now = Instant::now();
     dumb_solution_part1(numbers.clone());
     println!("Took {}ms", now.elapsed().as_micros());
 
+    println!("Running optimized solution part1");
+    let now = Instant::now();
+    optimized_solution_part1(numbers.clone());
+    println!("Took {}ms", now.elapsed().as_micros());
+
+    println!("Running optimized solution part1 hashset");
+    let now = Instant::now();
+    optimized_solution_part1_hashset(numbers.clone());
+    println!("Took {}ms", now.elapsed().as_micros());
+
     println!("Running dumb solution part2");
+    let now = Instant::now();
+    dumb_solution_part2(numbers.clone());
+    println!("Took {}ms", now.elapsed().as_micros());
+
+    println!("Running optimized solution part2");
     let now = Instant::now();
     dumb_solution_part2(numbers.clone());
     println!("Took {}ms", now.elapsed().as_micros());
