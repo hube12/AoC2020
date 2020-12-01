@@ -10,7 +10,7 @@ edition = "2018"
 
 
 [profile.dev]
-opt-level = 0
+opt-level = 3
 
 [profile.release]
 opt-level = 3
