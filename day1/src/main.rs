@@ -13,8 +13,8 @@ fn optimized_solution_part1(numbers: Vec<u16>) -> () {
         low.pop();
         let last_last_low: u16 = *low.last().expect("Something was wrong, there should be an index here");
         assert_eq!(last_last_low, last_low);
-        assert_eq!(last_last_low, 1024);
-        println!("Found 1024 twice ! {}", last_last_low * last_low);
+        assert_eq!(last_last_low, 1010);
+        println!("Found 1010 twice ! {}", last_last_low * last_low);
     }
     let mut last_index: usize = 0;
     while n > 0 {
