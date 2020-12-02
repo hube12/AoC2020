@@ -5,3 +5,7 @@
 
 **/.vscode/
 
+**/perf.data**
+*.svg
+
+day2/out/

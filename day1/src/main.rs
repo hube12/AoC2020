@@ -76,6 +76,7 @@ fn dumb_solution_part2(numbers: Vec<u16>) {
                 let n3: u16 = *numbers.get(k).expect("Something was wrong, there should be an index here");
                 if n1 + n2 + n3 == 2020 {
                     println!("Found {}, {} and {} which makes {}", n1, n2, n3, (n1 as u64).wrapping_mul(n2 as u64).wrapping_mul(n3 as u64));
+                    return;
                 }
             }
         }
@@ -149,30 +150,30 @@ fn main() {
     println!("Running dumb solution part1");
     let now = Instant::now();
     dumb_solution_part1(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 
     println!("Running optimized solution part1");
     let now = Instant::now();
     optimized_solution_part1(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 
     println!("Running optimized solution part1 hashset");
     let now = Instant::now();
     optimized_solution_part1_hashset(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 
     println!("Running dumb solution part2");
     let now = Instant::now();
     dumb_solution_part2(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 
     println!("Running optimized solution part2");
     let now = Instant::now();
     optimized_solution_part2(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 
     println!("Running optimized solution part2 hashset");
     let now = Instant::now();
     optimized_solution_part2_hashset(numbers.clone());
-    println!("Took {}ms", now.elapsed().as_micros());
+    println!("Took {}us", now.elapsed().as_micros());
 }
