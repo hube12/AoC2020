@@ -1,6 +1,7 @@
 
-.idea/
+**/.idea/
 
-day1/target/
+**/target/
 
-day1/.vscode/
+**/.vscode/
+
