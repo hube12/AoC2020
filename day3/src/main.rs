@@ -4,7 +4,6 @@ use std::time::Instant;
 
 fn number_of_tree_part_1(biome: Vec<String>, right: usize, down: usize) -> usize {
     let n: usize = biome.get(0).expect("Need at least one string").len();
-    assert!(n > right, "Not implemented");
     let mut it = biome.iter();
     it.next();
     let mut tree_count = 0;
