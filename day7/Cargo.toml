@@ -11,6 +11,7 @@ license="MIT"
 
 [dependencies]
 regex = "0.2"
+petgraph = "0.5.1"
 
 [profile.dev]
 opt-level = 3
