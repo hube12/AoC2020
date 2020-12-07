@@ -1,9 +1,9 @@
 [package]
-name = "day7"
+name = "day9"
 version = "0.1.0"
 authors = ["Neil <neilhube12@gmail.com>"]
 edition = "2018"
-description="Day 7 of AoC"
+description="Day 9 of AoC"
 categories=["algorithms","data-structures"]
 license="MIT"
 
