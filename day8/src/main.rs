@@ -2,83 +2,38 @@ use std::fs;
 use std::time::Instant;
 use std::collections::HashSet;
 
-fn part1(questions: Vec<String>) -> usize {
+fn process_automaton(questions: Vec<String>, error:bool) -> isize {
     let mut set: HashSet<usize> = HashSet::new();
-    let mut i: usize = 0;
+    let mut i: i64 = 0;
     let mut acc: i64 = 0;
-    while i < questions.len() && !set.contains(&i) {
-        let ins = questions.get(i).expect("Missing instruction");
+    while i < questions.len() as i64 && !set.contains(&(i as usize)) {
+        let ins = questions.get(i as usize).expect("Missing instruction");
         if ins.starts_with("nop") {
-            set.insert(i);
+            set.insert(i as usize);
             i += 1;
             continue;
         } else if ins.starts_with("acc") {
             let mut it = ins.split(" ");
             it.next();
             let number = it.next().expect("missing number");
-            if number.starts_with("+") {
-                acc += number.trim_start_matches("+").parse::<i64>().expect("no error");
-            } else {
-                acc -= number.trim_start_matches("-").parse::<i64>().expect("no error");
-            }
-            set.insert(i);
+            acc += number.parse::<i64>().expect("no error");
+            set.insert(i as usize);
             i += 1;
         } else {
-            set.insert(i);
+            set.insert(i as usize);
             let mut it = ins.split(" ");
             it.next();
             let number = it.next().expect("missing number");
-            if number.starts_with("+") {
-                i += number.trim_start_matches("+").parse::<usize>().expect("no error");
-            } else {
-                i -= number.trim_start_matches("-").parse::<usize>().expect("no error");
-            }
+            i += number.parse::<i64>().expect("no error");
         }
     }
-    acc as usize
+    if i == questions.len() as i64 || !error { acc  as isize} else { -1 }
 }
-
+fn part1(questions: Vec<String>) -> isize {
+    process_automaton(questions, false) as isize
+}
 fn part2(questions: Vec<String>) -> isize {
-    let mut set: HashSet<usize> = HashSet::new();
-    let mut i: usize = 0;
-    let mut acc: i64 = 0;
-    while i < questions.len() {
-        let ins = questions.get(i).expect("Missing instruction");
-        if ins.starts_with("nop") {
-            set.insert(i);
-            i += 1;
-            continue;
-        } else if ins.starts_with("acc") {
-            let mut it = ins.split(" ");
-            it.next();
-            let number = it.next().expect("missing number");
-            if number.starts_with("+") {
-                acc += number.trim_start_matches("+").parse::<i64>().expect("no error");
-            } else {
-                acc -= number.trim_start_matches("-").parse::<i64>().expect("no error");
-            }
-            set.insert(i);
-            i += 1;
-        } else {
-            set.insert(i);
-            let mut it = ins.split(" ");
-            it.next();
-            let number = it.next().expect("missing number");
-            let mut j=i;
-            if number.starts_with("+") {
-                j += number.trim_start_matches("+").parse::<usize>().expect("no error");
-            } else {
-                j -= number.trim_start_matches("-").parse::<usize>().expect("no error");
-            }
-
-            i=j;
-        }
-        if set.contains(&i){
-            return -1;
-        }
-
-    }
-    acc as isize
+    process_automaton(questions, true) as isize
 }
 
 fn main() {
@@ -96,20 +51,18 @@ fn main() {
     println!("Running part2");
     let now = Instant::now();
     for i in 0..questions.len() {
-        let mut t =questions.clone();
-        let line=t.get(i).expect("ee");
-        if line.starts_with("jmp"){
-            t[i]=line.replace("jmp","nop");
-        }else if line.starts_with("nop") {
-            t[i]=line.replace("nop","jmp");
+        let mut t = questions.clone();
+        let line = t.get(i).expect("ee");
+        if line.starts_with("jmp") {
+            t[i] = line.replace("jmp", "nop");
+        } else if line.starts_with("nop") {
+            t[i] = line.replace("nop", "jmp");
         }
-        let res=part2(t);
-        if res!=-1{
+        let res = part2(t);
+        if res != -1 {
             println!("Found {}", res);
         }
-
     }
 
-    println!("Took {}us", now.elapsed().as_micros());
-
+    println!("Took {}ms", now.elapsed().as_millis());
 }
