@@ -33,7 +33,21 @@ fn part1(questions: Vec<String>) -> isize {
     process_automaton(questions, false) as isize
 }
 fn part2(questions: Vec<String>) -> isize {
-    process_automaton(questions, true) as isize
+    for i in 0..questions.len() {
+        let mut t = questions.clone();
+        let line = t.get(i).expect("ee");
+        if line.starts_with("jmp") {
+            t[i] = line.replace("jmp", "nop");
+        } else if line.starts_with("nop") {
+            t[i] = line.replace("nop", "jmp");
+        }
+        let res = process_automaton(t, true);
+        if res != -1 {
+            return res;
+        }
+    }
+    -1
+
 }
 
 fn main() {
@@ -48,21 +62,9 @@ fn main() {
     let now = Instant::now();
     println!("Found {}", part1(questions.clone()));
     println!("Took {}us", now.elapsed().as_micros());
+    
     println!("Running part2");
     let now = Instant::now();
-    for i in 0..questions.len() {
-        let mut t = questions.clone();
-        let line = t.get(i).expect("ee");
-        if line.starts_with("jmp") {
-            t[i] = line.replace("jmp", "nop");
-        } else if line.starts_with("nop") {
-            t[i] = line.replace("nop", "jmp");
-        }
-        let res = part2(t);
-        if res != -1 {
-            println!("Found {}", res);
-        }
-    }
-
+    println!("Found {}", part2(questions.clone()));
     println!("Took {}ms", now.elapsed().as_millis());
 }
