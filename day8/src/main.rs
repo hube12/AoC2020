@@ -8,23 +8,19 @@ fn process_automaton(questions: Vec<String>, error:bool) -> isize {
     let mut acc: i64 = 0;
     while i < questions.len() as i64 && !set.contains(&(i as usize)) {
         let ins = questions.get(i as usize).expect("Missing instruction");
+        set.insert(i as usize);
         if ins.starts_with("nop") {
-            set.insert(i as usize);
-            i += 1;
-            continue;
-        } else if ins.starts_with("acc") {
-            let mut it = ins.split(" ");
-            it.next();
-            let number = it.next().expect("missing number");
-            acc += number.parse::<i64>().expect("no error");
-            set.insert(i as usize);
             i += 1;
         } else {
-            set.insert(i as usize);
             let mut it = ins.split(" ");
             it.next();
             let number = it.next().expect("missing number");
-            i += number.parse::<i64>().expect("no error");
+            if ins.starts_with("acc") {
+                acc += number.parse::<i64>().expect("no error");
+                i += 1;
+            } else {
+                i += number.parse::<i64>().expect("no error");
+            }
         }
     }
     if i == questions.len() as i64 || !error { acc  as isize} else { -1 }
@@ -32,6 +28,7 @@ fn process_automaton(questions: Vec<String>, error:bool) -> isize {
 fn part1(questions: Vec<String>) -> isize {
     process_automaton(questions, false) as isize
 }
+
 fn part2(questions: Vec<String>) -> isize {
     for i in 0..questions.len() {
         let mut t = questions.clone();
@@ -40,6 +37,8 @@ fn part2(questions: Vec<String>) -> isize {
             t[i] = line.replace("jmp", "nop");
         } else if line.starts_with("nop") {
             t[i] = line.replace("nop", "jmp");
+        }else{
+            continue;
         }
         let res = process_automaton(t, true);
         if res != -1 {
