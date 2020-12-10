@@ -43,6 +43,28 @@ fn part2(mut adapters: Vec<u64>) -> usize {
 }
 
 
+fn part2bis(mut adapters: Vec<u64>) -> usize {
+    adapters.sort();
+    let total_length = adapters.len();
+    let mut path_counts: Vec<usize> = vec![0; total_length];
+    for i in 0..total_length {
+        if adapters[i] - 0 > 3 {
+            break;
+        }
+        path_counts[i] = 1;
+    }
+    for i in 0..total_length-1 {
+        for j in i + 1..total_length {
+            if adapters[j] - adapters[i] > 3 {
+                break;
+            }
+            path_counts[j] += path_counts[i];
+        }
+    }
+    *path_counts.last().unwrap()
+}
+
+
 fn main() {
     let input = fs::read_to_string("input/test.txt")
         .expect("Something went wrong reading the file");
@@ -59,5 +81,10 @@ fn main() {
     println!("Running part2");
     let now = Instant::now();
     println!("Found {}", part2(adapters.clone()));
+    println!("Took {}us", now.elapsed().as_micros());
+
+    println!("Running part2 bis");
+    let now = Instant::now();
+    println!("Found {}", part2bis(adapters.clone()));
     println!("Took {}us", now.elapsed().as_micros());
 }
