@@ -12,9 +12,6 @@ enum Cardinal {
     WEST,
 }
 
-enum Direction {}
-
-
 fn move_stuff(mut x: i32, mut y: i32, dir: Cardinal, step: i32) -> (i32, i32) {
     match dir {
         Cardinal::NORTH => {
@@ -153,7 +150,6 @@ fn part2(directions: Vec<String>) -> usize {
             _ => { unimplemented!("not a pattern") }
         }
     }
-    dbg!(waypoint_x,waypoint_y);
     (ship_x.abs() + ship_y.abs()) as usize
 }
 
