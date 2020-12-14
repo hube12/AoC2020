@@ -16,7 +16,6 @@ fn part1(mut adapters: Vec<u64>) -> usize {
         last = *adapter;
     }
     *map.entry(3).or_insert(0) += 1;
-    dbg!(&map);
     map.get(&1u8).unwrap() * map.get(&3u8).unwrap()
 }
 
