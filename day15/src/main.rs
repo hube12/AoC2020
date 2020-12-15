@@ -1,6 +1,9 @@
+#![allow(unreachable_code)]
+
 use std::fs;
 use std::time::Instant;
 use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 fn solve(bound: usize, puzzle: Vec<u64>) -> usize {
     let mut map: HashMap<u64, (u64, u64)> = HashMap::new();
@@ -12,18 +15,21 @@ fn solve(bound: usize, puzzle: Vec<u64>) -> usize {
         last = *el.1;
     }
     for i in last_index + 1..bound + 1 {
-        if !map.contains_key(&last) {
-            last = 0;
-        } else {
-            let turn = map.get(&last).unwrap();
-            if turn.1 == u64::MAX {
+        let item = map.entry(last);
+        match item {
+            Entry::Occupied(ref entry) if entry.get().1 == u64::MAX => {
                 last = 0;
-            } else {
-                last = (turn.0 - turn.1) as u64;
+            }
+            Entry::Occupied(entry) => {
+                let z = entry.get();
+                last = (z.0 - z.1) as u64;
+            }
+            _ => {
+                panic!("Not possible");
+                last = 0;
             }
         }
-        let z = map.get(&last).unwrap_or(&(u64::MAX, u64::MAX)).0;
-        map.insert(last, (i as u64, z));
+        map.entry(last).and_modify(|e| *e = (i as u64, e.0)).or_insert((i as u64, u64::MAX));
     }
     last as usize
 }
