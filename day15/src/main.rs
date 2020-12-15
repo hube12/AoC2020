@@ -6,19 +6,19 @@ use std::time::Instant;
 fn solve(bound: usize, puzzle: Vec<u64>) -> usize {
     let mut last_index = 1;
     let mut last = 1;
-    let mut v = vec![(u64::MAX, u64::MAX); bound];
+    let mut v = vec![(u32::MAX, u32::MAX); bound];
     for el in puzzle.iter().enumerate() {
-        v[*el.1 as usize] = ((el.0 + 1) as u64, u64::MAX);
+        v[*el.1 as usize] = ((el.0 + 1) as u32, u32::MAX);
         last_index = el.0 + 1;
         last = *el.1;
     }
     for i in last_index + 1..bound + 1 {
-        if v[last as usize].1 == u64::MAX {
+        if v[last as usize].1 == u32::MAX {
             last = 0
         } else {
-            last = i as u64 - v[last as usize].1 - 1;
+            last = i as u64 - v[last as usize].1 as u64 - 1;
         }
-        v[last as usize]=(i as u64,  v[last as usize].0);
+        v[last as usize] = (i as u32, v[last as usize].0);
     }
     last as usize
 }
