@@ -2,34 +2,23 @@
 
 use std::fs;
 use std::time::Instant;
-use std::collections::HashMap;
-use std::collections::hash_map::Entry;
 
 fn solve(bound: usize, puzzle: Vec<u64>) -> usize {
-    let mut map: HashMap<u64, (u64, u64)> = HashMap::new();
     let mut last_index = 1;
     let mut last = 1;
+    let mut v = vec![(u64::MAX, u64::MAX); bound];
     for el in puzzle.iter().enumerate() {
-        map.insert(*el.1, ((el.0 + 1) as u64, u64::MAX));
+        v[*el.1 as usize] = ((el.0 + 1) as u64, u64::MAX);
         last_index = el.0 + 1;
         last = *el.1;
     }
     for i in last_index + 1..bound + 1 {
-        let item = map.entry(last);
-        match item {
-            Entry::Occupied(ref entry) if entry.get().1 == u64::MAX => {
-                last = 0;
-            }
-            Entry::Occupied(entry) => {
-                let z = entry.get();
-                last = (z.0 - z.1) as u64;
-            }
-            _ => {
-                panic!("Not possible");
-                last = 0;
-            }
+        if v[last as usize].1 == u64::MAX {
+            last = 0
+        } else {
+            last = i as u64 - v[last as usize].1 - 1;
         }
-        map.entry(last).and_modify(|e| *e = (i as u64, e.0)).or_insert((i as u64, u64::MAX));
+        v[last as usize]=(i as u64,  v[last as usize].0);
     }
     last as usize
 }
