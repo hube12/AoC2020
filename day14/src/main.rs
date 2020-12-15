@@ -55,10 +55,8 @@ fn process_mask2(mask: &String, value: u64) -> Vec<u64> {
                     'X'
                 }
             };
-
             re.push(r);
         }
-
     }
     let mut fin: Vec<u64> = vec![];
     for (i, pair) in res.iter_mut().enumerate() {
