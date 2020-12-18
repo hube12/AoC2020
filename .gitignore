@@ -11,3 +11,5 @@
 day2/out/
 
 temp/
+
+*.nim
